@@ -1,0 +1,40 @@
+# IDE and Editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Dependencies
+node_modules/
+.pnp/
+.pnp.js
+.yarn/install-state.gz
+
+# Build and Debug
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.next/
+out/
+build/
+dist/
+
+# Docker
+.docker/
+docker-compose.override.yml
+
+# Data directories
+.flowise/
+data/
+volumes/
+
+# System Files
+Thumbs.db
+.directory

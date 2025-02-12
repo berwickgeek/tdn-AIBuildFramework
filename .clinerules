@@ -1,0 +1,95 @@
+# TDN AI Build Framework Architecture
+
+## Overview
+
+This project is a local development environment for building AI-powered web applications using Next.js and Refine Framework, supported by containerized services for data storage and AI capabilities.
+
+## Local Development
+
+- Next.js + Refine Framework application runs locally (not containerized)
+- Development server runs on http://localhost:3000
+- Hot reloading and development features fully available
+
+## Supporting Docker Services
+
+### PostgreSQL (Vector Database)
+
+- Container: aibf-postgres
+- Image: ankane/pgvector:latest
+- Port: 5433:5432
+- Credentials:
+  - User: admin
+  - Database: appdb
+- Features:
+  - Vector similarity search capabilities
+  - Persistent data storage
+  - Custom initialization scripts
+
+### MongoDB
+
+- Container: aibf-mongodb
+- Image: mongo:latest
+- Port: 27017:27017
+- Credentials:
+  - User: admin
+  - Database: appdb
+- Features:
+  - Document storage
+  - Custom initialization scripts
+  - Authentication enabled
+
+### Flowise (AI Flow Builder)
+
+- Container: aibf-flowise
+- Image: flowiseai/flowise:2.2.4
+- Port: 3002:3002
+- Credentials:
+  - Username: admin
+- Features:
+  - Visual AI flow builder
+  - API endpoint generation
+  - Custom flow storage
+
+### Administration Tools
+
+#### PGAdmin (PostgreSQL Management)
+
+- Container: aibf-pgadmin
+- Port: 5050:80
+- Access: http://localhost:5050
+- Credentials:
+  - Email: admin@admin.com
+
+#### Mongo Express (MongoDB Management)
+
+- Container: aibf-mongo-express
+- Port: 8081:8081
+- Access: http://localhost:8081
+- Basic authentication enabled
+
+## Network Configuration
+
+- All services connected via 'aibf-network' bridge network
+- Internal service discovery enabled
+- Secure communication between containers
+
+## Data Persistence
+
+- PostgreSQL data: Volume 'aibf-postgres-data'
+- MongoDB data: Volume 'aibf-mongodb-data'
+- PGAdmin settings: Volume 'aibf-pgadmin-data'
+
+## Development Workflow
+
+1. Start Docker services: `docker-compose up -d`
+2. Run Next.js development server locally: `cd 3dnAiPortal && npm run dev`
+3. Access services:
+   - Main application: http://localhost:3000
+   - Flowise: http://localhost:3002
+   - Database admins: http://localhost:5050 (PG) / http://localhost:8081 (Mongo)
+
+## Security Notes
+
+- All services have authentication enabled
+- Default credentials should be changed in production
+- Local development environment only

@@ -137,6 +137,27 @@ const App = (props: React.PropsWithChildren<AppProps>) => {
               authProvider={authProvider}
               resources={[
                 {
+                  name: "chat",
+                  list: "/chat",
+                  meta: {
+                    label: "Chat",
+                  },
+                },
+                {
+                  name: "services",
+                  list: "/services",
+                  meta: {
+                    label: "Services",
+                  },
+                },
+                {
+                  name: "mongo",
+                  list: "/mongo",
+                  meta: {
+                    label: "Mongo",
+                  },
+                },
+                {
                   name: "about",
                   list: "/about",
                   meta: {

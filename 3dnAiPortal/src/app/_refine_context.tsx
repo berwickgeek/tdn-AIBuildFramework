@@ -1,10 +1,11 @@
 "use client";
 
 import { useNotificationProvider } from "@refinedev/antd";
-import { GitHubBanner, Refine, type AuthProvider } from "@refinedev/core";
+import { Refine, type AuthProvider } from "@refinedev/core";
 import { RefineKbar, RefineKbarProvider } from "@refinedev/kbar";
 import { SessionProvider, signIn, signOut, useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 import React from "react";
 
 import routerProvider from "@refinedev/nextjs-router";
@@ -104,16 +105,44 @@ const App = (props: React.PropsWithChildren<AppProps>) => {
 
   return (
     <>
-      <GitHubBanner />
       <RefineKbarProvider>
         <AntdRegistry>
           <ColorModeContextProvider defaultMode={defaultMode}>
             <Refine
               routerProvider={routerProvider}
               dataProvider={dataProvider}
+              Title={() => (
+                <div
+                  style={{ display: "flex", alignItems: "center", gap: "8px" }}
+                >
+                  <div
+                    style={{
+                      position: "relative",
+                      width: "24px",
+                      height: "24px",
+                    }}
+                  >
+                    <Image
+                      src="/assets/images/Logo.png"
+                      alt="3DN Logo"
+                      fill
+                      style={{ objectFit: "contain" }}
+                      priority
+                    />
+                  </div>
+                  <span>3DN AI Portal</span>
+                </div>
+              )}
               notificationProvider={useNotificationProvider}
               authProvider={authProvider}
               resources={[
+                {
+                  name: "about",
+                  list: "/about",
+                  meta: {
+                    label: "About",
+                  },
+                },
                 {
                   name: "blog_posts",
                   list: "/blog-posts",

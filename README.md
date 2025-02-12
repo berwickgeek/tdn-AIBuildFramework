@@ -146,18 +146,6 @@ Services are configured with healthchecks to ensure proper startup order:
 2. Flowise starts only after both databases are healthy
 3. Web interfaces (pgAdmin, Mongo Express) start after their respective databases
 
-The following environment variables are configured for internal service connections:
-
-- **Flowise**:
-  ```
-  MONGODB_URI=mongodb://appuser:ASlobdQ3ji@mongodb:27017/appdb?authSource=appdb
-  POSTGRES_HOST=postgres
-  POSTGRES_PORT=5432
-  POSTGRES_USER=admin
-  POSTGRES_PASSWORD=ASlobdQ3ji
-  POSTGRES_DB=appdb
-  ```
-
 ### Networking
 
 All services are connected through a Docker network named 'aibf-network', enabling seamless inter-service communication while maintaining isolation.

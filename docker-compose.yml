@@ -1,0 +1,119 @@
+version: '3.8'
+
+services:
+  flowise:
+    container_name: aibf-flowise
+    image: flowiseai/flowise:2.2.4
+    ports:
+      - "3002:3002"
+    volumes:
+      - ~/.flowise:/root/.flowise
+    environment:
+      - PORT=3002
+      - FLOWISE_USERNAME=admin
+      - FLOWISE_PASSWORD=ASlobdQ3ji
+      - DATABASE_PATH=/root/.flowise
+      - APIKEY_PATH=/root/.flowise
+      - LOG_PATH=/root/.flowise/logs
+      - SECRETKEY_PATH=/root/.flowise
+      - BLOB_STORAGE_PATH=/root/.flowise/storage
+      - DEBUG=true
+      - LOG_LEVEL=info
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mongodb:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - app-network
+
+  postgres:
+    container_name: aibf-postgres
+    image: ankane/pgvector:latest
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./init/postgres:/docker-entrypoint-initdb.d
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: ASlobdQ3ji
+      POSTGRES_DB: appdb
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d appdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - app-network
+
+  pgadmin:
+    container_name: aibf-pgadmin
+    image: dpage/pgadmin4:latest
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: ASlobdQ3ji
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+    restart: unless-stopped
+    networks:
+      - app-network
+
+  mongodb:
+    container_name: aibf-mongodb
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb-data:/data/db
+      - ./init/mongo/init.js:/docker-entrypoint-initdb.d/init.js:ro
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: ASlobdQ3ji
+      MONGO_INITDB_DATABASE: appdb
+    command: mongod --bind_ip 0.0.0.0 --port 27017 --auth
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: always
+    networks:
+      - app-network
+
+  mongo-express:
+    container_name: aibf-mongo-express
+    image: mongo-express:latest
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ASlobdQ3ji
+      ME_CONFIG_MONGODB_URL: mongodb://admin:ASlobdQ3ji@mongodb:27017/
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: ASlobdQ3ji
+    depends_on:
+      - mongodb
+    restart: always
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    name: aibf-network
+    driver: bridge
+
+volumes:
+  postgres-data:
+    name: aibf-postgres-data
+  mongodb-data:
+    name: aibf-mongodb-data
+  pgadmin-data:
+    name: aibf-pgadmin-data

@@ -160,7 +160,7 @@ All services are containerized and connected through a Docker network, enabling 
    - Add Mappers:
      - email
      - profile
-     - roles
+     - realm roles
      - groups
 
 4. Create Test User

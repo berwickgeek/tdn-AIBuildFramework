@@ -2,6 +2,55 @@
 
 A development toolkit for building AI applications with integrated services.
 
+## Overview
+
+This framework provides a complete development environment for building AI-powered web applications. Here's how the services work together:
+
+### Core Application
+
+- A Next.js application provides the frontend interface and API routes
+- Built with Refine Framework for rapid development of admin interfaces
+- Protected by Keycloak authentication for secure access control
+
+### AI and Data Processing
+
+- **Flowise** serves as the AI workflow builder, allowing you to:
+  - Create visual AI workflows without coding
+  - Connect to various AI models and APIs
+  - Generate and expose API endpoints for your AI flows
+  - Store and process data using the integrated databases
+
+### Data Storage
+
+- **PostgreSQL with pgvector** handles vector storage and similarity search:
+
+  - Stores embeddings for AI models
+  - Enables semantic search capabilities
+  - Provides fast vector similarity operations
+  - Persists structured application data
+
+- **MongoDB** manages document storage:
+  - Stores unstructured data and documents
+  - Handles metadata and relationships
+  - Provides flexible schema for varying data types
+
+### Administration & Monitoring
+
+- **Keycloak** manages authentication and authorization:
+
+  - Centralized user management
+  - Role-based access control
+  - OAuth2/OpenID Connect protocols
+  - Single sign-on capabilities
+
+- **pgAdmin & Mongo Express** provide database management:
+  - Visual interfaces for database operations
+  - Data browsing and querying
+  - Schema management
+  - Performance monitoring
+
+All services are containerized and connected through a Docker network, enabling seamless communication while maintaining isolation and security.
+
 ## Services
 
 ### Flowise
@@ -18,7 +67,7 @@ A development toolkit for building AI applications with integrated services.
     ```
     Connect Credential: local
     Host: postgres
-    Database: appdb
+    Database: postgres
     Port: 5432
     Username: admin
     Password: ASlobdQ3ji
@@ -36,13 +85,8 @@ A development toolkit for building AI applications with integrated services.
 - **Admin Credentials**:
   - Username: admin
   - Password: ASlobdQ3ji
-- **Application Credentials**:
-  - Username: appuser
-  - Password: ASlobdQ3ji
-  - Database: appdb
 - **Connection Strings**:
   - Admin: `mongodb://admin:ASlobdQ3ji@localhost:27017/?authSource=admin`
-  - Application: `mongodb://appuser:ASlobdQ3ji@localhost:27017/appdb?authSource=appdb`
 
 ### Mongo Express (MongoDB Web Interface)
 
@@ -58,7 +102,7 @@ A development toolkit for building AI applications with integrated services.
 - **Credentials**:
   - Username: admin
   - Password: ASlobdQ3ji
-  - Database: appdb
+  - Database: postgres
 - **Connection String**: `postgresql://admin:ASlobdQ3ji@localhost:5433/appdb`
 - **Vector Store Setup**:
   - Enabled pgvector extension
@@ -80,6 +124,63 @@ A development toolkit for building AI applications with integrated services.
   - Email: admin@admin.com
   - Password: ASlobdQ3ji
 
+### Keycloak (Authentication)
+
+- **Port**: 8080
+- **Access**: http://localhost:8080
+- **Admin Credentials**:
+  - Username: admin
+  - Password: ASlobdQ3ji
+
+#### Initial Setup
+
+1. Create Realm
+
+   - Log into Keycloak admin console
+   - Click "Create Realm"
+   - Set Name to "tdnportal"
+   - Save
+
+2. Create Client
+
+   - In the tdnportal realm, go to Clients → Create client
+   - Set Client ID to "tdnportal-client"
+   - Set Client type to "OpenID Connect"
+   - Enable "Client authentication" and "Authorization"
+   - Configure Valid redirect URIs:
+     - http://localhost:3000/\*
+     - http://localhost:3000/api/auth/callback/keycloak
+   - Set Valid post logout redirect URIs to: http://localhost:3000
+   - Set Web origins to: http://localhost:3000
+
+3. Configure Client Scopes
+
+   - Go to Client scopes
+   - Click on "tdnportal-client-dedicated"
+   - Add Mappers:
+     - email
+     - profile
+     - realm roles
+     - groups
+
+4. Create Test User
+
+   - Go to Users → Add user
+   - Set Username and Email
+   - Enable "Email verified"
+   - Set password (disable "Temporary")
+
+5. Optional: Create Roles
+
+   - Go to Realm roles
+   - Create roles (e.g., "admin", "user")
+   - Assign roles to users
+
+6. Client Secret
+   - Go to Clients → tdnportal-client → Credentials
+   - Copy Client secret
+   - Update KEYCLOAK_CLIENT_SECRET in .env.local
+
 ## Getting Started
 
 1. Start all services:
@@ -93,6 +194,7 @@ docker compose up -d
    - Flowise: http://localhost:3002
    - Mongo Express: http://localhost:8081
    - pgAdmin: http://localhost:5050
+   - Keycloak: http://localhost:8080
 
 3. Connect to databases:
    - MongoDB: Use MongoDB Compass or any MongoDB client with the connection strings above

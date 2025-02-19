@@ -144,6 +144,13 @@ const App = (props: React.PropsWithChildren<AppProps>) => {
                   },
                 },
                 {
+                  name: "crm_chat",
+                  list: "/crm-chat",
+                  meta: {
+                    label: "CRM Chat",
+                  },
+                },
+                {
                   name: "services",
                   list: "/services",
                   meta: {

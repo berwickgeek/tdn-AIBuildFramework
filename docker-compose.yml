@@ -4,6 +4,8 @@ services:
   flowise:
     container_name: aibf-flowise
     image: flowiseai/flowise:2.2.4
+    extra_hosts:
+      - "host.docker.internal:host-gateway"  # Add this line
     ports:
       - "3002:3002"
     volumes:
@@ -109,11 +111,15 @@ networks:
   app-network:
     name: aibf-network
     driver: bridge
+    external: true
 
 volumes:
   postgres-data:
     name: aibf-postgres-data
+    external: true
   mongodb-data:
     name: aibf-mongodb-data
+    external: true
   pgadmin-data:
     name: aibf-pgadmin-data
+    external: true

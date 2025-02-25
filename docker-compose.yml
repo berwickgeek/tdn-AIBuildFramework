@@ -124,6 +124,35 @@ services:
         condition: service_healthy
     networks:
       - app-network
+      
+  n8n:
+    container_name: aibf-n8n
+    image: n8nio/n8n:latest
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_PORT=5678
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=postgres
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_DATABASE=appdb
+      - DB_POSTGRESDB_USER=admin
+      - DB_POSTGRESDB_PASSWORD=ASlobdQ3ji
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=admin
+      - N8N_BASIC_AUTH_PASSWORD=ASlobdQ3ji
+      - NODE_ENV=production
+      - WEBHOOK_URL=http://localhost:5678/
+      - EXECUTIONS_PROCESS=main
+      - GENERIC_TIMEZONE=Australia/Brisbane
+    volumes:
+      - n8n-data:/home/node/.n8n
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - app-network
 
 networks:
   app-network:
@@ -141,3 +170,5 @@ volumes:
   pgadmin-data:
     name: aibf-pgadmin-data
     external: true
+  n8n-data:
+    name: aibf-n8n-data

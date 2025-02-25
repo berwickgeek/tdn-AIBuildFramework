@@ -132,6 +132,17 @@ All services are containerized and connected through a Docker network, enabling 
   - Username: admin
   - Password: ASlobdQ3ji
 
+### n8n (Workflow Automation)
+
+- **Port**: 5678
+- **Access**: http://localhost:5678
+- **Admin Credentials**:
+  - Username: admin@admin.com
+  - Password: ASlobdQ3ji
+- **Database Connection**:
+  - Uses PostgreSQL for workflow and execution storage
+  - Configured to use the same database as other services
+
 #### Initial Setup
 
 1. Create Realm
@@ -195,6 +206,7 @@ docker compose up -d
    - Mongo Express: http://localhost:8081
    - pgAdmin: http://localhost:5050
    - Keycloak: http://localhost:8080
+   - n8n: http://localhost:5678
 
 3. Connect to databases:
    - MongoDB: Use MongoDB Compass or any MongoDB client with the connection strings above
@@ -219,6 +231,14 @@ docker compose up -d
 - Low-code UI for building AI workflows
 - Integrated with both MongoDB and PostgreSQL for data persistence
 - Customizable API endpoints for workflow automation
+
+### n8n
+
+- Powerful workflow automation platform
+- Visual editor for creating complex workflows
+- Integrates with hundreds of services and APIs
+- Uses PostgreSQL for data persistence
+- Complements Flowise by providing general automation capabilities
 
 ## Development
 
@@ -257,3 +277,4 @@ All services are connected through a Docker network named 'aibf-network', enabli
 - MongoDB data: Stored in named volume `aibf-mongodb-data`
 - PostgreSQL data: Stored in named volume `aibf-postgres-data`
 - pgAdmin settings: Stored in named volume `aibf-pgadmin-data`
+- n8n data: Stored in named volume `aibf-n8n-data`
